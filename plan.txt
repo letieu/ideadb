@@ -1,0 +1,17 @@
+Project Plan: ideaDB UI
+
+Core Framework: Next.js (App Router) with TypeScript.
+Styling & UI: Tailwind CSS combined with shadcn/ui for a neat, minimal, and beautiful aesthetic.
+Database: SQLite using better-sqlite3 to interface directly with your init.sql schema.
+Key Features (Phase 1):
+Problem Explorer: A searchable interface to browse real-world problems, view pain points, and filter by categories.
+Idea Explorer: A view to discover startup ideas, their features, and linked problems.
+Product Explorer: A catalog of existing products with descriptions and links.
+Voting/Interaction: UI elements to upvote/score items (visual implementation connected to DB).
+Visual Design: Clean, content-focused layout. We will skip the landing page and default directly to the "Explorer" dashboard.
+
+Action Plan:
+Initialize: Scaffold a new Next.js application in the current directory.
+Database Setup: Create the SQLite database and seed it using your init.sql.
+Components: Install necessary shadcn/ui components (Cards, Tables, Badges, Buttons).
+Development: Build the main explorer pages (/problems, /ideas, /products) and connect them to the database via Server Actions.
