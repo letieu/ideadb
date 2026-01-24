@@ -1,10 +1,10 @@
 import { getProducts, getCategories } from '@/lib/data';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FilterBar } from '@/components/filter-bar';
+import { getCategoryColor, cn } from '@/lib/utils';
 
 export default async function ProductsPage({
   searchParams,
@@ -16,47 +16,64 @@ export default async function ProductsPage({
   const categories = getCategories();
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-        <p className="text-muted-foreground">Existing solutions in the market.</p>
-      </div>
+    <div className="space-y-12">
+      <header className="space-y-4">
+        <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight text-foreground">
+          Products
+        </h1>
+        <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
+            Case studies of existing solutions and products currently serving the market.
+        </p>
+      </header>
 
-      <FilterBar categories={categories} hasScore={false} />
+      <div className="space-y-8">
+        <FilterBar categories={categories} hasScore={false} />
 
-      <div className="grid gap-4 md:grid-cols-1">
-        {products.map((product) => (
-          <Card key={product.id} className="group hover:shadow-lg hover:border-primary/20 transition-all duration-300 p-6 bg-card/80 backdrop-blur-sm">
-            <div className="flex flex-col space-y-3">
-              <div className="flex justify-between items-start">
-                <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">{product.name}</h3>
-                {product.url && (
-                    <Button variant="ghost" size="icon" asChild className="ml-2 hover:bg-primary/10 hover:text-primary transition-colors">
-                        <Link href={product.url} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="h-4 w-4" />
-                        </Link>
-                    </Button>
-                )}
+        <div className="space-y-4">
+          {products.map((product) => (
+            <article key={product.id} className="group bg-card hover:bg-accent/5 shadow-md hover:shadow-xl transition-all duration-200 rounded-2xl overflow-hidden">
+              <div className="p-4 sm:p-8 space-y-3 sm:space-y-4">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                  <div className="space-y-2 flex-1 min-w-0 w-full">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-serif font-semibold tracking-tight text-foreground leading-tight">{product.name}</h2>
+                    {product.categories && product.categories.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                          {product.categories.map((c) => (
+                            <Badge 
+                              key={c.slug} 
+                              variant="outline" 
+                              className={cn("text-xs font-medium", getCategoryColor(c.slug))}
+                            >
+                              {c.name}
+                            </Badge>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                  {product.url && (
+                      <Link href={product.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 self-start">
+                        <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-product hover:bg-product/10 transition-colors">
+                          <ExternalLink className="h-4 w-4" />
+                          <span className="sr-only">Visit product website</span>
+                        </Button>
+                      </Link>
+                  )}
+                </div>
+                
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  {product.description}
+                </p>
               </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {product.categories?.map((c) => (
-                  <Badge key={c.slug} variant="secondary" className="hover:bg-secondary/80 transition-colors">
-                    {c.name}
-                  </Badge>
-                ))}
-              </div>
-
-              <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+            </article>
+          ))}
+          
+          {products.length === 0 && (
+            <div className="text-center py-16 bg-muted/30 rounded-2xl shadow-inner">
+              <p className="text-base text-muted-foreground font-medium">No products found matching your criteria</p>
+              <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
             </div>
-          </Card>
-        ))}
-        {products.length === 0 && (
-           <div className="flex flex-col items-center justify-center py-16 text-muted-foreground bg-card/50 rounded-lg border border-dashed">
-             <p className="text-lg font-medium">No products found</p>
-             <p className="text-sm">Try adjusting your filters or search terms.</p>
-           </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

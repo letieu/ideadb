@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Check, ChevronsUpDown, Filter, Search, X } from 'lucide-react';
+import { Check, ChevronsUpDown, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,92 +41,76 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
   const [openCategory, setOpenCategory] = React.useState(false);
   const [query, setQuery] = React.useState(searchParams.get('q') || '');
 
-  // Debounce search
-  React.useEffect(() => {
-    const handler = setTimeout(() => {
-        updateParam('q', query);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [query]);
-
   const currentCategory = searchParams.get('category');
   const currentSort = searchParams.get('sort') || (hasScore ? 'score_desc' : 'newest');
 
-  const updateParam = (key: string, value: string | null) => {
+  const updateParam = React.useCallback((key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value && value !== 'all') {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-    router.replace(`${pathname}?${params.toString()}`);
-  };
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+        updateParam('q', query);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [query, updateParam]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-6 bg-card/50 p-4 rounded-lg border backdrop-blur-sm shadow-sm">
-      {/* Search */}
-      <div className="relative flex-1">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full">
+      <div className="relative flex-1 w-full">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-9 bg-background/50 border-muted-foreground/20 focus-visible:ring-primary/20"
+          className="pl-10 h-10 bg-background border-border focus-visible:ring-1 focus-visible:ring-ring"
         />
       </div>
 
-      <div className="flex gap-2">
-        {/* Category Filter */}
+      <div className="flex items-center gap-2 w-full sm:w-auto">
         <Popover open={openCategory} onOpenChange={setOpenCategory}>
             <PopoverTrigger asChild>
             <Button
                 variant="outline"
-                role="combobox"
-                aria-expanded={openCategory}
-                className="w-[200px] justify-between bg-background/50 border-muted-foreground/20"
+                size="sm"
+                className="h-10 px-4 justify-between font-normal flex-1 sm:flex-none sm:w-auto"
             >
                 {currentCategory
                 ? categories.find((c) => c.slug === currentCategory)?.name
-                : "Filter by category..."}
+                : "Category"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[200px] p-0" align="end">
             <Command>
                 <CommandInput placeholder="Search category..." />
                 <CommandList>
                     <CommandEmpty>No category found.</CommandEmpty>
                     <CommandGroup>
                         <CommandItem
-                            value="all"
                             onSelect={() => {
                                 updateParam('category', null);
                                 setOpenCategory(false);
                             }}
                         >
-                            <Check
-                            className={cn(
-                                "mr-2 h-4 w-4",
-                                !currentCategory ? "opacity-100" : "opacity-0"
-                            )}
-                            />
+                            <Check className={cn("mr-2 h-4 w-4", !currentCategory ? "opacity-100" : "opacity-0")} />
                             All Categories
                         </CommandItem>
                         {categories.map((category) => (
                             <CommandItem
                             key={category.slug}
-                            value={category.name} // Command searches by this value
                             onSelect={() => {
                                 updateParam('category', category.slug === currentCategory ? null : category.slug);
                                 setOpenCategory(false);
                             }}
                             >
-                            <Check
-                                className={cn(
-                                "mr-2 h-4 w-4",
-                                currentCategory === category.slug ? "opacity-100" : "opacity-0"
-                                )}
-                            />
+                            <Check className={cn("mr-2 h-4 w-4", currentCategory === category.slug ? "opacity-100" : "opacity-0")} />
                             {category.name}
                             </CommandItem>
                         ))}
@@ -136,28 +120,28 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
             </PopoverContent>
         </Popover>
 
-        {/* Sort Select */}
-        <Select
-            value={currentSort}
-            onValueChange={(val) => updateParam('sort', val)}
-        >
-            <SelectTrigger className="w-[180px] bg-background/50 border-muted-foreground/20">
-                <SelectValue placeholder="Sort by" />
+        <Select value={currentSort} onValueChange={(val) => updateParam('sort', val)}>
+            <SelectTrigger className="w-[140px] text-sm font-normal">
+                <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>
-                {hasScore && <SelectItem value="score_desc">Highest Score</SelectItem>}
-                {hasScore && <SelectItem value="score_asc">Lowest Score</SelectItem>}
+                {hasScore && <SelectItem value="score_desc">Popular</SelectItem>}
                 <SelectItem value="newest">Newest</SelectItem>
                 <SelectItem value="oldest">Oldest</SelectItem>
             </SelectContent>
         </Select>
 
-        {/* Clear Filters Button (only if filters active) */}
         {(currentCategory || query) && (
-            <Button variant="ghost" size="icon" onClick={() => {
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-10 w-10 hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0" 
+              onClick={() => {
                 setQuery('');
                 router.replace(pathname);
-            }}>
+              }}
+              aria-label="Clear filters"
+            >
                 <X className="h-4 w-4" />
             </Button>
         )}
