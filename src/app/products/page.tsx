@@ -31,7 +31,7 @@ export default async function ProductsPage({
 
         <div className="space-y-4">
           {products.map((product) => (
-            <article key={product.id} className="group bg-card hover:bg-accent/5 shadow-md hover:shadow-xl transition-all duration-200 rounded-2xl overflow-hidden">
+            <article key={product.id} className="group border-2 border-dashed border-border hover:border-primary/50 bg-transparent hover:bg-accent/5 transition-all duration-200 rounded-2xl overflow-hidden">
               <div className="p-4 sm:p-8 space-y-3 sm:space-y-4">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
                   <div className="space-y-2 flex-1 min-w-0 w-full">
@@ -68,7 +68,7 @@ export default async function ProductsPage({
           ))}
           
           {products.length === 0 && (
-            <div className="text-center py-16 bg-muted/30 rounded-2xl shadow-inner">
+            <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
               <p className="text-base text-muted-foreground font-medium">No products found matching your criteria</p>
               <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
             </div>

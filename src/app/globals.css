@@ -228,4 +228,17 @@
   .ayu-dark body {
     background: oklch(0.14 0.01 240);
   }
+
+  /* Loading animation */
+  @keyframes loading {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(250%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 }

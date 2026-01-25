@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Zen_Maru_Gothic } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LoadingBar } from "@/components/loading-bar";
 
 const zenMaruGothic = Zen_Maru_Gothic({
   variable: "--font-zen-maru-gothic",
@@ -28,18 +30,20 @@ export default function RootLayout({
       >
         <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="rose-pine"
             enableSystem
             disableTransitionOnChange
             themes={['light', 'dark', 'rose-pine', 'rose-pine-dawn', 'ayu-light', 'ayu-dark']}
           >
           <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main className="max-w-5xl mx-auto py-16 px-4 sm:px-6 lg:px-8 w-full flex-1">
-              <div className="max-w-4xl mx-auto">
-                {children}
-              </div>
-            </main>
+            <Suspense fallback={<LoadingBar />}>
+              <main className="max-w-5xl mx-auto py-16 px-4 sm:px-6 lg:px-8 w-full flex-1">
+                <div className="max-w-4xl mx-auto">
+                  {children}
+                </div>
+              </main>
+            </Suspense>
             <footer className="mt-24 bg-muted/20 shadow-inner">
               <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <p className="text-center text-sm text-muted-foreground">

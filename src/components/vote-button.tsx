@@ -6,7 +6,17 @@ import { voteItem } from '@/lib/actions';
 import { useTransition } from 'react';
 import { cn } from '@/lib/utils';
 
-export function VoteButton({ id, type, currentScore }: { id: string, type: 'problem' | 'idea', currentScore: number }) {
+export function VoteButton({ 
+  id, 
+  type, 
+  currentScore, 
+  size = 'default' 
+}: { 
+  id: string;
+  type: 'problem' | 'idea';
+  currentScore: number;
+  size?: 'default' | 'sm';
+}) {
     const [isPending, startTransition] = useTransition();
 
     const handleVote = (value: number) => {
@@ -15,20 +25,32 @@ export function VoteButton({ id, type, currentScore }: { id: string, type: 'prob
         });
     }
 
+    const isSmall = size === 'sm';
+
     return (
-    <div className="flex flex-row sm:flex-col gap-2 sm:gap-1">
+    <div className={cn(
+      "flex flex-row sm:flex-col gap-2 sm:gap-1",
+      isSmall && "gap-1"
+    )}>
             <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-6 w-6 hover:bg-primary/10 hover:text-primary transition-colors p-0" 
+                className={cn(
+                  "hover:bg-primary/10 hover:text-primary transition-colors p-0",
+                  isSmall ? "h-5 w-5" : "h-6 w-6"
+                )}
                 onClick={() => handleVote(1)} 
                 disabled={isPending}
                 aria-label="Upvote"
             >
-                <ArrowBigUp className={cn("h-4 w-4", currentScore > 0 && "fill-primary text-primary")} />
+                <ArrowBigUp className={cn(
+                  currentScore > 0 && "fill-primary text-primary",
+                  isSmall ? "h-3.5 w-3.5" : "h-4 w-4"
+                )} />
             </Button>
             <span className={cn(
-                "font-semibold text-xs tabular-nums min-w-[2ch] text-center px-1 sm:px-0 sm:py-1",
+                "font-semibold tabular-nums min-w-[2ch] text-center px-1 sm:px-0 sm:py-1",
+                isSmall ? "text-xs" : "text-xs",
                 currentScore > 0 ? "text-primary" : currentScore < 0 ? "text-destructive" : "text-muted-foreground"
             )}>
                 {currentScore}
@@ -36,12 +58,18 @@ export function VoteButton({ id, type, currentScore }: { id: string, type: 'prob
              <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-6 w-6 hover:bg-destructive/10 hover:text-destructive transition-colors p-0" 
+                className={cn(
+                  "hover:bg-destructive/10 hover:text-destructive transition-colors p-0",
+                  isSmall ? "h-5 w-5" : "h-6 w-6"
+                )}
                 onClick={() => handleVote(-1)} 
                 disabled={isPending}
                 aria-label="Downvote"
             >
-                <ArrowBigDown className={cn("h-4 w-4", currentScore < 0 && "fill-destructive text-destructive")} />
+                <ArrowBigDown className={cn(
+                  currentScore < 0 && "fill-destructive text-destructive",
+                  isSmall ? "h-3.5 w-3.5" : "h-4 w-4"
+                )} />
             </Button>
         </div>
     );

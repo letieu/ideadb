@@ -29,7 +29,7 @@ export default async function IdeasPage({
 
         <div className="space-y-4">
           {ideas.map((idea) => (
-            <article key={idea.id} className="group bg-card hover:bg-accent/5 shadow-md hover:shadow-xl transition-all duration-200 rounded-2xl overflow-hidden">
+            <article key={idea.id} className="group border-2 border-dashed border-border hover:border-primary/50 bg-transparent hover:bg-accent/5 transition-all duration-200 rounded-2xl overflow-hidden">
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
                 <aside className="order-2 sm:order-1 flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0 sm:flex-shrink-0">
                     <VoteButton id={idea.id} type="idea" currentScore={idea.score} />
@@ -70,7 +70,7 @@ export default async function IdeasPage({
           ))}
           
           {ideas.length === 0 && (
-            <div className="text-center py-16 bg-muted/30 rounded-2xl shadow-inner">
+            <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
               <p className="text-base text-muted-foreground font-medium">No ideas found matching your criteria</p>
               <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
             </div>
