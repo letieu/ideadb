@@ -2,6 +2,8 @@ import { getProblems, getCategories } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { FilterBar } from '@/components/filter-bar';
 import { VoteButton } from '@/components/vote-button';
+import { Pagination } from '@/components/pagination';
+import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -9,20 +11,24 @@ import ReactMarkdown from 'react-markdown';
 export default async function ProblemsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>;
 }) {
-  const { q, category, sort } = await searchParams;
-  const problems = getProblems(q, category, sort);
+  const { q, category, sort, page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const { data: problems, metadata } = getProblems(q, category, sort, currentPage);
   const categories = getCategories();
 
   return (
     <div className="space-y-12">
       <header className="space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight text-foreground">
-          Problems
-        </h1>
+        <TitleNav />
         <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
           Deeply understand real-world challenges before thinking about solutions.
+          {metadata.total > 0 && (
+            <span className="block mt-1 font-medium text-primary">
+              Showing {metadata.total} problem{metadata.total !== 1 ? 's' : ''}
+            </span>
+          )}
         </p>
       </header>
 
@@ -93,6 +99,8 @@ export default async function ProblemsPage({
               <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
             </div>
           )}
+
+          <Pagination totalPages={metadata.totalPages} currentPage={metadata.page} />
         </div>
       </div>
     </div>

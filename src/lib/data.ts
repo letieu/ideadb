@@ -69,15 +69,10 @@ function buildSortClause(sort: string | undefined, hasScore: boolean, tableAlias
   }
 }
 
-export function getProblems(search?: string, category?: string, sort?: string) {
-  let query = `
-    SELECT p.id, p.slug, p.title, p.description, p.pain_points, p.score, p.created_at, 
-           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
-    FROM problems p
-    LEFT JOIN problem_categories pc ON p.id = pc.problem_id
-    LEFT JOIN categories c ON pc.category_slug = c.slug
-  `;
-  
+export function getProblems(search?: string, category?: string, sort?: string, page: number = 1, limit: number = 10) {
+  const offset = (page - 1) * limit;
+
+  // Base conditions
   const params: any[] = [];
   const conditions: string[] = [];
 
@@ -91,33 +86,56 @@ export function getProblems(search?: string, category?: string, sort?: string) {
     params.push(`%${search}%`, `%${search}%`);
   }
 
-  if (conditions.length > 0) {
-    query += ' WHERE ' + conditions.join(' AND ');
-  }
+  const whereClause = conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
 
+  // Count query
+  let countQuery = `
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM problems p
+    LEFT JOIN problem_categories pc ON p.id = pc.problem_id
+  `;
+  countQuery += whereClause;
+  const total = (db.prepare(countQuery).get(...params) as any).total;
+
+  // Data query
+  let query = `
+    SELECT p.id, p.slug, p.title, p.description, p.pain_points, p.score, p.created_at, 
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    FROM problems p
+    LEFT JOIN problem_categories pc ON p.id = pc.problem_id
+    LEFT JOIN categories c ON pc.category_slug = c.slug
+  `;
+  
+  query += whereClause;
   query += ' GROUP BY p.id, p.slug';
   query += ' ORDER BY ' + buildSortClause(sort, true, 'p');
+  query += ' LIMIT ? OFFSET ?';
 
-  const rows = db.prepare(query).all(...params);
+  const rows = db.prepare(query).all(...params, limit, offset);
   
-  return rows.map((row: any) => ({
+  const data = rows.map((row: any) => ({
     ...row,
     categories: row.category_slugs ? row.category_slugs.split(',').map((slug: string, index: number) => ({
       slug,
       name: row.category_names.split(',')[index]
     })) : []
   })) as Problem[];
+
+  return {
+    data,
+    metadata: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
 }
 
-export function getIdeas(search?: string, category?: string, sort?: string) {
-    let query = `
-    SELECT i.id, i.slug, i.title, i.description, i.features, i.score, i.created_at,
-           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
-    FROM ideas i
-    LEFT JOIN idea_categories ic ON i.id = ic.idea_id
-    LEFT JOIN categories c ON ic.category_slug = c.slug
-  `;
-  
+export function getIdeas(search?: string, category?: string, sort?: string, page: number = 1, limit: number = 10) {
+  const offset = (page - 1) * limit;
+
+  // Base conditions
   const params: any[] = [];
   const conditions: string[] = [];
 
@@ -131,32 +149,56 @@ export function getIdeas(search?: string, category?: string, sort?: string) {
     params.push(`%${search}%`, `%${search}%`);
   }
 
-  if (conditions.length > 0) {
-    query += ' WHERE ' + conditions.join(' AND ');
-  }
+  const whereClause = conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
 
+  // Count query
+  let countQuery = `
+    SELECT COUNT(DISTINCT i.id) as total
+    FROM ideas i
+    LEFT JOIN idea_categories ic ON i.id = ic.idea_id
+  `;
+  countQuery += whereClause;
+  const total = (db.prepare(countQuery).get(...params) as any).total;
+
+  // Data query
+  let query = `
+    SELECT i.id, i.slug, i.title, i.description, i.features, i.score, i.created_at,
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    FROM ideas i
+    LEFT JOIN idea_categories ic ON i.id = ic.idea_id
+    LEFT JOIN categories c ON ic.category_slug = c.slug
+  `;
+  
+  query += whereClause;
   query += ' GROUP BY i.id, i.slug';
   query += ' ORDER BY ' + buildSortClause(sort, true, 'i');
+  query += ' LIMIT ? OFFSET ?';
 
-  const rows = db.prepare(query).all(...params);
-   return rows.map((row: any) => ({
+  const rows = db.prepare(query).all(...params, limit, offset);
+  
+  const data = rows.map((row: any) => ({
     ...row,
     categories: row.category_slugs ? row.category_slugs.split(',').map((slug: string, index: number) => ({
       slug,
       name: row.category_names.split(',')[index]
     })) : []
   })) as Idea[];
+
+  return {
+    data,
+    metadata: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
 }
 
-export function getProducts(search?: string, category?: string, sort?: string) {
-    let query = `
-    SELECT p.id, p.slug, p.name, p.description, p.url, p.created_at,
-           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
-    FROM products p
-    LEFT JOIN product_categories pc ON p.id = pc.product_id
-    LEFT JOIN categories c ON pc.category_slug = c.slug
-  `;
-  
+export function getProducts(search?: string, category?: string, sort?: string, page: number = 1, limit: number = 10) {
+  const offset = (page - 1) * limit;
+
+  // Base conditions
   const params: any[] = [];
   const conditions: string[] = [];
 
@@ -170,21 +212,50 @@ export function getProducts(search?: string, category?: string, sort?: string) {
     params.push(`%${search}%`, `%${search}%`);
   }
 
-  if (conditions.length > 0) {
-    query += ' WHERE ' + conditions.join(' AND ');
-  }
+  const whereClause = conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
 
+  // Count query
+  let countQuery = `
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM products p
+    LEFT JOIN product_categories pc ON p.id = pc.product_id
+  `;
+  countQuery += whereClause;
+  const total = (db.prepare(countQuery).get(...params) as any).total;
+
+  // Data query
+  let query = `
+    SELECT p.id, p.slug, p.name, p.description, p.url, p.created_at,
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    FROM products p
+    LEFT JOIN product_categories pc ON p.id = pc.product_id
+    LEFT JOIN categories c ON pc.category_slug = c.slug
+  `;
+  
+  query += whereClause;
   query += ' GROUP BY p.id, p.slug';
   query += ' ORDER BY ' + buildSortClause(sort, false, 'p'); // Products don't have score
+  query += ' LIMIT ? OFFSET ?';
+
+  const rows = db.prepare(query).all(...params, limit, offset);
   
-  const rows = db.prepare(query).all(...params);
-   return rows.map((row: any) => ({
+  const data = rows.map((row: any) => ({
     ...row,
     categories: row.category_slugs ? row.category_slugs.split(',').map((slug: string, index: number) => ({
       slug,
       name: row.category_names.split(',')[index]
     })) : []
   })) as Product[];
+
+  return {
+    data,
+    metadata: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
 }
 
 // Get a single problem by slug with full details

@@ -4,26 +4,32 @@ import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FilterBar } from '@/components/filter-bar';
+import { Pagination } from '@/components/pagination';
+import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>;
 }) {
-  const { q, category, sort } = await searchParams;
-  const products = getProducts(q, category, sort);
+  const { q, category, sort, page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const { data: products, metadata } = getProducts(q, category, sort, currentPage);
   const categories = getCategories();
 
   return (
     <div className="space-y-12">
       <header className="space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight text-foreground">
-          Products
-        </h1>
+        <TitleNav />
         <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
             Case studies of existing solutions and products currently serving the market.
+            {metadata.total > 0 && (
+              <span className="block mt-1 font-medium text-primary">
+                Showing {metadata.total} product{metadata.total !== 1 ? 's' : ''}
+              </span>
+            )}
         </p>
       </header>
 
@@ -80,6 +86,8 @@ export default async function ProductsPage({
               <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
             </div>
           )}
+
+          <Pagination totalPages={metadata.totalPages} currentPage={metadata.page} />
         </div>
       </div>
     </div>

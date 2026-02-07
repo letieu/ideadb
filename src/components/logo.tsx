@@ -6,43 +6,26 @@ export function Logo({ className = "h-8 w-8" }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Database layers */}
-      <ellipse cx="50" cy="25" rx="35" ry="10" fill="currentColor" opacity="0.2" />
-      <ellipse cx="50" cy="35" rx="35" ry="10" fill="currentColor" opacity="0.3" />
-      <ellipse cx="50" cy="45" rx="35" ry="10" fill="currentColor" opacity="0.4" />
-      
-      {/* Lightbulb - idea symbol */}
-      <circle cx="50" cy="60" r="15" fill="currentColor" opacity="0.15" />
+      {/* The Bulb (Idea) - Solid Primary Circle */}
+      <circle cx="50" cy="40" r="32" fill="var(--primary)" />
+
+      {/* The Insight - Negative space Lightning Bolt */}
       <path
-        d="M50 45 C42 45, 37 50, 37 58 C37 63, 40 67, 43 70 L43 78 C43 80, 45 82, 47 82 L53 82 C55 82, 57 80, 57 78 L57 70 C60 67, 63 63, 63 58 C63 50, 58 45, 50 45 Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      
-      {/* Bulb filament */}
-      <path
-        d="M50 52 L50 62"
-        stroke="currentColor"
+        d="M52 18 L38 40 H50 L46 62 L62 36 H52 L52 18Z"
+        fill="var(--background)"
+        stroke="var(--background)"
         strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.4"
+        strokeLinejoin="round"
       />
+
+      {/* The Base (Database/Foundation) - Single Minimal Line */}
+      <rect x="40" y="80" width="20" height="6" rx="3" fill="var(--muted-foreground)" />
+
+      {/* Accent Sparkle - Top Right (Coral) */}
       <path
-        d="M46 56 L54 56"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.4"
+        d="M85 15 L88 8 L91 15 L98 18 L91 21 L88 28 L85 21 L78 18 L85 15Z"
+        fill="var(--destructive)"
       />
-      
-      {/* Base of bulb */}
-      <rect x="47" y="78" width="6" height="4" fill="currentColor" opacity="0.8" />
-      <rect x="46" y="82" width="8" height="2" fill="currentColor" opacity="0.6" />
-      
-      {/* Sparkle effect */}
-      <circle cx="65" cy="50" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="35" cy="55" r="1.5" fill="currentColor" opacity="0.5" />
-      <circle cx="60" cy="70" r="1.5" fill="currentColor" opacity="0.5" />
     </svg>
   );
 }
