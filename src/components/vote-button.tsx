@@ -10,12 +10,14 @@ export function VoteButton({
   id, 
   type, 
   currentScore, 
-  size = 'default' 
+  size = 'default',
+  orientation
 }: { 
   id: string;
   type: 'problem' | 'idea';
   currentScore: number;
   size?: 'default' | 'sm';
+  orientation?: 'vertical' | 'horizontal';
 }) {
     const [isPending, startTransition] = useTransition();
 
@@ -29,7 +31,10 @@ export function VoteButton({
 
     return (
     <div className={cn(
-      "flex flex-row sm:flex-col gap-2 sm:gap-1",
+      "flex items-center",
+      orientation === 'horizontal' ? "flex-row gap-2" : 
+      orientation === 'vertical' ? "flex-col gap-1" : 
+      "flex-row sm:flex-col gap-2 sm:gap-1",
       isSmall && "gap-1"
     )}>
             <Button 
@@ -49,7 +54,10 @@ export function VoteButton({
                 )} />
             </Button>
             <span className={cn(
-                "font-semibold tabular-nums min-w-[2ch] text-center px-1 sm:px-0 sm:py-1",
+                "font-semibold tabular-nums min-w-[2ch] text-center",
+                orientation === 'horizontal' ? "px-1" : 
+                orientation === 'vertical' ? "py-1" : 
+                "px-1 sm:px-0 sm:py-1",
                 isSmall ? "text-xs" : "text-xs",
                 currentScore > 0 ? "text-primary" : currentScore < 0 ? "text-destructive" : "text-muted-foreground"
             )}>

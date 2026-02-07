@@ -22,16 +22,13 @@ export function NavItems() {
             key={item.href} 
             href={item.href}
             className={cn(
-              "cursor-pointer h-9 px-3 text-sm font-medium transition-colors relative inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground",
+              "cursor-pointer h-9 px-4 text-sm font-medium transition-all inline-flex items-center justify-center rounded-lg",
               isActive 
-                ? "text-foreground font-semibold" 
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-accent text-foreground font-semibold shadow-sm" 
+                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
             )}
           >
             {item.label}
-            {isActive && (
-                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-foreground rounded-full pointer-events-none" />
-            )}
           </Link>
         );
       })}

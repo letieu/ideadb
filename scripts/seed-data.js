@@ -8,8 +8,8 @@ console.log('Seeding data...');
 
 // Helper to insert problem
 const insertProblem = db.prepare(`
-    INSERT INTO problems (id, title, description, pain_points, score)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO problems (id, slug, title, description, pain_points, score)
+    VALUES (?, ?, ?, ?, ?, ?)
 `);
 
 // Helper to link problem category
@@ -20,8 +20,8 @@ const insertProblemCategory = db.prepare(`
 
 // Helper to insert idea
 const insertIdea = db.prepare(`
-    INSERT INTO ideas (id, title, description, features, score)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO ideas (id, slug, title, description, features, score)
+    VALUES (?, ?, ?, ?, ?, ?)
 `);
 
 // Helper to link idea category
@@ -32,8 +32,8 @@ const insertIdeaCategory = db.prepare(`
 
 // Helper to insert product
 const insertProduct = db.prepare(`
-    INSERT INTO products (id, name, description, url)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO products (id, slug, name, description, url)
+    VALUES (?, ?, ?, ?, ?)
 `);
 
 const insertProductCategory = db.prepare(`
@@ -45,6 +45,7 @@ const insertProductCategory = db.prepare(`
 const problems = [
     {
         id: 'prob_1',
+        slug: 'difficulty-finding-healthy-fast-food',
         title: 'Difficulty finding healthy fast food',
         description: 'People want to eat healthy but have limited time during lunch breaks. Fast food options are usually unhealthy.',
         pain_points: 'High calories, low nutritional value, expensive "healthy" options',
@@ -53,6 +54,7 @@ const problems = [
     },
     {
         id: 'prob_2',
+        slug: 'managing-remote-team-culture',
         title: 'Managing remote team culture',
         description: 'Companies struggle to maintain company culture and employee engagement when everyone is working from home.',
         pain_points: 'Isolation, lack of spontaneous communication, burnout',
@@ -61,6 +63,7 @@ const problems = [
     },
     {
         id: 'prob_3',
+        slug: 'too-many-subscription-services',
         title: 'Too many subscription services',
         description: 'Users forget about subscriptions they don\'t use and waste money.',
         pain_points: 'Financial waste, difficulty tracking',
@@ -72,6 +75,7 @@ const problems = [
 const ideas = [
     {
         id: 'idea_1',
+        slug: 'healthy-fast-food-vending-machines',
         title: 'Healthy fast food vending machines',
         description: 'Vending machines that dispense fresh, healthy salads and bowls.',
         features: 'Daily restocking, app integration, customizable orders',
@@ -80,6 +84,7 @@ const ideas = [
     },
     {
         id: 'idea_2',
+        slug: 'virtual-watercooler-for-remote-teams',
         title: 'Virtual watercooler for remote teams',
         description: 'An app that simulates spontaneous office interactions through audio channels.',
         features: 'Voice channels, games, random pairings',
@@ -91,6 +96,7 @@ const ideas = [
 const products = [
     {
         id: 'prod_1',
+        slug: 'sweetgreen',
         name: 'Sweetgreen',
         description: 'Fast casual restaurant chain that serves healthy salads.',
         url: 'https://sweetgreen.com',
@@ -98,6 +104,7 @@ const products = [
     },
     {
         id: 'prod_2',
+        slug: 'discord',
         name: 'Discord',
         description: 'Voice, video and text communication service used by gamers and communities.',
         url: 'https://discord.com',
@@ -108,7 +115,7 @@ const products = [
 const transaction = db.transaction(() => {
     for (const p of problems) {
         try {
-            insertProblem.run(p.id, p.title, p.description, p.pain_points, p.score);
+            insertProblem.run(p.id, p.slug, p.title, p.description, p.pain_points, p.score);
             for (const c of p.categories) {
                 insertProblemCategory.run(p.id, c);
             }
@@ -116,7 +123,7 @@ const transaction = db.transaction(() => {
     }
     for (const i of ideas) {
         try {
-             insertIdea.run(i.id, i.title, i.description, i.features, i.score);
+             insertIdea.run(i.id, i.slug, i.title, i.description, i.features, i.score);
              for (const c of i.categories) {
                  insertIdeaCategory.run(i.id, c);
              }
@@ -124,7 +131,7 @@ const transaction = db.transaction(() => {
     }
     for (const p of products) {
         try {
-            insertProduct.run(p.id, p.name, p.description, p.url);
+            insertProduct.run(p.id, p.slug, p.name, p.description, p.url);
             for (const c of p.categories) {
                 insertProductCategory.run(p.id, c);
             }

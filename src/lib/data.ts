@@ -7,6 +7,7 @@ export type Category = {
 
 export type Problem = {
   id: string;
+  slug: string;
   title: string;
   description: string;
   pain_points: string; 
@@ -17,6 +18,7 @@ export type Problem = {
 
 export type Idea = {
   id: string;
+  slug: string;
   title: string;
   description: string;
   features: string;
@@ -27,6 +29,7 @@ export type Idea = {
 
 export type Product = {
   id: string;
+  slug: string;
   name: string;
   description: string;
   url: string;
@@ -51,23 +54,25 @@ export function getCategories() {
   return db.prepare('SELECT * FROM categories ORDER BY name').all() as Category[];
 }
 
-function buildSortClause(sort: string | undefined, hasScore: boolean) {
+function buildSortClause(sort: string | undefined, hasScore: boolean, tableAlias: string = '') {
+  const prefix = tableAlias ? `${tableAlias}.` : '';
   switch (sort) {
     case 'oldest':
-      return 'created_at ASC';
+      return `${prefix}created_at ASC`;
     case 'newest':
-      return 'created_at DESC';
+      return `${prefix}created_at DESC`;
     case 'score_asc':
-      return hasScore ? 'score ASC' : 'created_at ASC';
+      return hasScore ? `${prefix}score ASC` : `${prefix}created_at ASC`;
     case 'score_desc':
     default:
-      return hasScore ? 'score DESC' : 'created_at DESC';
+      return hasScore ? `${prefix}score DESC` : `${prefix}created_at DESC`;
   }
 }
 
 export function getProblems(search?: string, category?: string, sort?: string) {
   let query = `
-    SELECT p.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    SELECT p.id, p.slug, p.title, p.description, p.pain_points, p.score, p.created_at, 
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
     FROM problems p
     LEFT JOIN problem_categories pc ON p.id = pc.problem_id
     LEFT JOIN categories c ON pc.category_slug = c.slug
@@ -90,8 +95,8 @@ export function getProblems(search?: string, category?: string, sort?: string) {
     query += ' WHERE ' + conditions.join(' AND ');
   }
 
-  query += ' GROUP BY p.id';
-  query += ' ORDER BY ' + buildSortClause(sort, true);
+  query += ' GROUP BY p.id, p.slug';
+  query += ' ORDER BY ' + buildSortClause(sort, true, 'p');
 
   const rows = db.prepare(query).all(...params);
   
@@ -106,7 +111,8 @@ export function getProblems(search?: string, category?: string, sort?: string) {
 
 export function getIdeas(search?: string, category?: string, sort?: string) {
     let query = `
-    SELECT i.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    SELECT i.id, i.slug, i.title, i.description, i.features, i.score, i.created_at,
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
     FROM ideas i
     LEFT JOIN idea_categories ic ON i.id = ic.idea_id
     LEFT JOIN categories c ON ic.category_slug = c.slug
@@ -129,8 +135,8 @@ export function getIdeas(search?: string, category?: string, sort?: string) {
     query += ' WHERE ' + conditions.join(' AND ');
   }
 
-  query += ' GROUP BY i.id';
-  query += ' ORDER BY ' + buildSortClause(sort, true);
+  query += ' GROUP BY i.id, i.slug';
+  query += ' ORDER BY ' + buildSortClause(sort, true, 'i');
 
   const rows = db.prepare(query).all(...params);
    return rows.map((row: any) => ({
@@ -144,7 +150,8 @@ export function getIdeas(search?: string, category?: string, sort?: string) {
 
 export function getProducts(search?: string, category?: string, sort?: string) {
     let query = `
-    SELECT p.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    SELECT p.id, p.slug, p.name, p.description, p.url, p.created_at,
+           GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
     FROM products p
     LEFT JOIN product_categories pc ON p.id = pc.product_id
     LEFT JOIN categories c ON pc.category_slug = c.slug
@@ -167,8 +174,8 @@ export function getProducts(search?: string, category?: string, sort?: string) {
     query += ' WHERE ' + conditions.join(' AND ');
   }
 
-  query += ' GROUP BY p.id';
-  query += ' ORDER BY ' + buildSortClause(sort, false); // Products don't have score
+  query += ' GROUP BY p.id, p.slug';
+  query += ' ORDER BY ' + buildSortClause(sort, false, 'p'); // Products don't have score
   
   const rows = db.prepare(query).all(...params);
    return rows.map((row: any) => ({
@@ -180,16 +187,16 @@ export function getProducts(search?: string, category?: string, sort?: string) {
   })) as Product[];
 }
 
-// Get a single problem by ID with full details
-export function getProblemById(id: string) {
+// Get a single problem by slug with full details
+export function getProblemBySlug(slug: string) {
   const problem = db.prepare(`
     SELECT p.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
     FROM problems p
     LEFT JOIN problem_categories pc ON p.id = pc.problem_id
     LEFT JOIN categories c ON pc.category_slug = c.slug
-    WHERE p.id = ?
+    WHERE p.slug = ?
     GROUP BY p.id
-  `).get(id) as any;
+  `).get(slug) as any;
 
   if (!problem) return null;
 
@@ -255,4 +262,59 @@ export function getSourceItemsForProblem(problemId: string) {
     ORDER BY score DESC, source_created_at DESC
     LIMIT 10
   `).all(problemId) as SourceItem[];
+}
+
+// Get source items for an idea
+export function getSourceItemsForIdea(ideaId: string) {
+  return db.prepare(`
+    SELECT id, source, source_item_id, title, content, author, url, score, created_at, source_created_at
+    FROM source_items
+    WHERE idea_id = ?
+    ORDER BY score DESC, source_created_at DESC
+    LIMIT 10
+  `).all(ideaId) as SourceItem[];
+}
+
+// Get a single idea by slug with full details
+export function getIdeaBySlug(slug: string) {
+  const idea = db.prepare(`
+    SELECT i.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    FROM ideas i
+    LEFT JOIN idea_categories ic ON i.id = ic.idea_id
+    LEFT JOIN categories c ON ic.category_slug = c.slug
+    WHERE i.slug = ?
+    GROUP BY i.id
+  `).get(slug) as any;
+
+  if (!idea) return null;
+
+  return {
+    ...idea,
+    categories: idea.category_slugs ? idea.category_slugs.split(',').map((slug: string, index: number) => ({
+      slug,
+      name: idea.category_names.split(',')[index]
+    })) : []
+  } as Idea;
+}
+
+// Get problems linked to an idea
+export function getProblemsForIdea(ideaId: string) {
+  const rows = db.prepare(`
+    SELECT p.*, GROUP_CONCAT(c.name) as category_names, GROUP_CONCAT(c.slug) as category_slugs
+    FROM problems p
+    INNER JOIN problem_idea pi ON p.id = pi.problem_id
+    LEFT JOIN problem_categories pc ON p.id = pc.problem_id
+    LEFT JOIN categories c ON pc.category_slug = c.slug
+    WHERE pi.idea_id = ?
+    GROUP BY p.id
+    ORDER BY p.score DESC
+  `).all(ideaId);
+
+  return rows.map((row: any) => ({
+    ...row,
+    categories: row.category_slugs ? row.category_slugs.split(',').map((slug: string, index: number) => ({
+      slug,
+      name: row.category_names.split(',')[index]
+    })) : []
+  })) as Problem[];
 }

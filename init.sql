@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS problems (
     int_id INTEGER PRIMARY KEY AUTOINCREMENT,
     id TEXT UNIQUE NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     pain_points TEXT,
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS problems (
 -- Create ideas table
 CREATE TABLE IF NOT EXISTS ideas (
     id TEXT PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     features TEXT,
@@ -47,6 +49,7 @@ CREATE TABLE IF NOT EXISTS ideas (
 -- Create products table
 CREATE TABLE IF NOT EXISTS products (
     id TEXT PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     url TEXT,
@@ -104,13 +107,13 @@ CREATE TABLE IF NOT EXISTS source_items (
 );
 
 -- Create vector table for embeddings
--- CREATE VIRTUAL TABLE IF NOT EXISTS vec_source_items USING vec0(
---     embedding FLOAT[768]
--- );
+CREATE VIRTUAL TABLE IF NOT EXISTS vec_source_items USING vec0(
+    embedding FLOAT[768]
+);
 
--- CREATE VIRTUAL TABLE IF NOT EXISTS vec_problems USING vec0(
---     embedding FLOAT[768]
--- );
+CREATE VIRTUAL TABLE IF NOT EXISTS vec_problems USING vec0(
+    embedding FLOAT[768]
+);
 
 -- Create problem-idea linking table
 CREATE TABLE IF NOT EXISTS problem_idea (

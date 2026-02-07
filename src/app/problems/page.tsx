@@ -4,6 +4,7 @@ import { FilterBar } from '@/components/filter-bar';
 import { VoteButton } from '@/components/vote-button';
 import { getCategoryColor, cn } from '@/lib/utils';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 
 export default async function ProblemsPage({
   searchParams,
@@ -30,7 +31,7 @@ export default async function ProblemsPage({
 
         <div className="space-y-4">
           {problems.map((problem) => (
-            <Link key={problem.id} href={`/problems/${problem.id}`} className="block">
+            <Link key={problem.id} href={`/problems/${problem.slug}`} className="block">
               <article className="group border-2 border-dashed border-border hover:border-primary/50 bg-transparent hover:bg-accent/5 transition-all duration-200 rounded-2xl overflow-hidden cursor-pointer">
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
                   <aside className="order-2 sm:order-1 flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0 sm:flex-shrink-0">
@@ -56,14 +57,28 @@ export default async function ProblemsPage({
                       )}
                     </div>
                     
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-2">
-                      {problem.description}
-                    </p>
+                    <div className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-2">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <span className="mb-0">{children}</span>,
+                        }}
+                      >
+                        {problem.description}
+                      </ReactMarkdown>
+                    </div>
 
                     {problem.pain_points && (
-                      <blockquote className="bg-problem/5 pl-3 sm:pl-4 pr-3 sm:pr-4 py-3 sm:py-4 text-sm italic text-foreground/80 rounded-xl shadow-sm line-clamp-2">
-                        <span className="text-xs font-semibold text-problem uppercase tracking-wide not-italic block mb-1">Pain Points</span>
-                        &ldquo;{problem.pain_points}&rdquo;
+                      <blockquote className="bg-problem/5 pl-3 sm:pl-4 pr-3 sm:pr-4 py-3 sm:py-4 text-sm text-foreground/80 rounded-xl shadow-sm">
+                        <span className="text-xs font-semibold text-problem uppercase tracking-wide block mb-1">Pain Points</span>
+                        <div className="line-clamp-2">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <span className="mb-0">&ldquo;{children}&rdquo;</span>,
+                            }}
+                          >
+                            {problem.pain_points}
+                          </ReactMarkdown>
+                        </div>
                       </blockquote>
                     )}
                   </div>

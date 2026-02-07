@@ -5,6 +5,7 @@ import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FilterBar } from '@/components/filter-bar';
 import { getCategoryColor, cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
 
 export default async function ProductsPage({
   searchParams,
@@ -60,9 +61,15 @@ export default async function ProductsPage({
                   )}
                 </div>
                 
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  {product.description}
-                </p>
+                <div className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-3">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <span className="mb-0">{children}</span>,
+                    }}
+                  >
+                    {product.description}
+                  </ReactMarkdown>
+                </div>
               </div>
             </article>
           ))}
