@@ -64,27 +64,27 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full">
       <div className="relative flex-1 w-full">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 pointer-events-none" />
         <Input
           placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 h-10 bg-background border-border focus-visible:ring-1 focus-visible:ring-ring"
+          className="pl-11 h-11 bg-background/50 border-border/60 hover:border-border focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 transition-all duration-200"
         />
       </div>
 
-      <div className="flex items-center gap-2 w-full sm:w-auto">
+      <div className="flex items-center gap-3 w-full sm:w-auto">
         <Popover open={openCategory} onOpenChange={setOpenCategory}>
             <PopoverTrigger asChild>
             <Button
                 variant="outline"
                 size="sm"
-                className="h-10 px-4 justify-between font-normal flex-1 sm:flex-none sm:w-auto"
+                className="h-11 px-4 justify-between font-medium flex-1 sm:flex-none sm:w-auto border-border/60 hover:border-border hover:bg-accent/50 transition-all duration-200"
             >
                 {currentCategory
                 ? categories.find((c) => c.slug === currentCategory)?.name
                 : "Category"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-60" />
             </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0" align="end">
@@ -121,7 +121,7 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
         </Popover>
 
         <Select value={currentSort} onValueChange={(val) => updateParam('sort', val)}>
-            <SelectTrigger className="w-[140px] text-sm font-normal">
+            <SelectTrigger className="w-[140px] h-11 text-sm font-medium border-border/60 hover:border-border transition-all duration-200">
                 <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>
@@ -135,7 +135,7 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-10 w-10 hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0" 
+              className="h-11 w-11 hover:bg-destructive/10 hover:text-destructive transition-all duration-200 shrink-0" 
               onClick={() => {
                 setQuery('');
                 router.replace(pathname);

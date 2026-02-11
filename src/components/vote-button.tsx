@@ -31,18 +31,18 @@ export function VoteButton({
 
     return (
     <div className={cn(
-      "flex items-center",
-      orientation === 'horizontal' ? "flex-row gap-2" : 
-      orientation === 'vertical' ? "flex-col gap-1" : 
-      "flex-row sm:flex-col gap-2 sm:gap-1",
-      isSmall && "gap-1"
+      "flex items-center rounded-lg bg-muted/30 border border-border/30",
+      orientation === 'horizontal' ? "flex-row gap-2 px-3 py-1.5" : 
+      orientation === 'vertical' ? "flex-col gap-1 px-2 py-2" : 
+      "flex-row sm:flex-col gap-2 sm:gap-1 px-3 py-1.5 sm:px-2 sm:py-2",
+      isSmall && "gap-1 px-2 py-1"
     )}>
             <Button 
                 variant="ghost" 
                 size="icon" 
                 className={cn(
-                  "hover:bg-primary/10 hover:text-primary transition-colors p-0",
-                  isSmall ? "h-5 w-5" : "h-6 w-6"
+                  "hover:bg-primary/10 hover:text-primary transition-all duration-200 p-0",
+                  isSmall ? "h-6 w-6" : "h-7 w-7"
                 )}
                 onClick={() => handleVote(1)} 
                 disabled={isPending}
@@ -50,16 +50,16 @@ export function VoteButton({
             >
                 <ArrowBigUp className={cn(
                   currentScore > 0 && "fill-primary text-primary",
-                  isSmall ? "h-3.5 w-3.5" : "h-4 w-4"
+                  isSmall ? "h-4 w-4" : "h-5 w-5"
                 )} />
             </Button>
             <span className={cn(
-                "font-semibold tabular-nums min-w-[2ch] text-center",
+                "font-bold tabular-nums min-w-[2.5ch] text-center",
                 orientation === 'horizontal' ? "px-1" : 
                 orientation === 'vertical' ? "py-1" : 
                 "px-1 sm:px-0 sm:py-1",
-                isSmall ? "text-xs" : "text-xs",
-                currentScore > 0 ? "text-primary" : currentScore < 0 ? "text-destructive" : "text-muted-foreground"
+                isSmall ? "text-xs" : "text-sm",
+                currentScore > 0 ? "text-primary" : currentScore < 0 ? "text-destructive" : "text-muted-foreground/70"
             )}>
                 {currentScore}
             </span>
@@ -67,8 +67,8 @@ export function VoteButton({
                 variant="ghost" 
                 size="icon" 
                 className={cn(
-                  "hover:bg-destructive/10 hover:text-destructive transition-colors p-0",
-                  isSmall ? "h-5 w-5" : "h-6 w-6"
+                  "hover:bg-destructive/10 hover:text-destructive transition-all duration-200 p-0",
+                  isSmall ? "h-6 w-6" : "h-7 w-7"
                 )}
                 onClick={() => handleVote(-1)} 
                 disabled={isPending}
@@ -76,7 +76,7 @@ export function VoteButton({
             >
                 <ArrowBigDown className={cn(
                   currentScore < 0 && "fill-destructive text-destructive",
-                  isSmall ? "h-3.5 w-3.5" : "h-4 w-4"
+                  isSmall ? "h-4 w-4" : "h-5 w-5"
                 )} />
             </Button>
         </div>

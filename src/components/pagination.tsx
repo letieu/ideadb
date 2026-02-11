@@ -69,25 +69,25 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <div className="flex items-center justify-center space-x-2 py-8">
+    <div className="flex items-center justify-center gap-2 py-12">
       <Button
         variant="outline"
         size="icon"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="h-9 w-9"
+        className="h-10 w-10 border-border/60 hover:border-border disabled:opacity-40"
       >
         <ChevronLeft className="h-4 w-4" />
         <span className="sr-only">Previous Page</span>
       </Button>
 
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center gap-1.5">
         {allPages.map((page, index) => {
           if (page === '...') {
             return (
               <div
                 key={`ellipsis-${index}`}
-                className="flex h-9 w-9 items-center justify-center text-muted-foreground"
+                className="flex h-10 w-10 items-center justify-center text-muted-foreground/50"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </div>
@@ -104,8 +104,9 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
               size="icon"
               onClick={() => handlePageChange(pageNumber)}
               className={cn(
-                "h-9 w-9",
-                isCurrent && "pointer-events-none"
+                "h-10 w-10 font-semibold transition-all duration-200",
+                isCurrent && "pointer-events-none shadow-sm",
+                !isCurrent && "hover:bg-accent/50"
               )}
             >
               {page}
@@ -119,7 +120,7 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
         size="icon"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="h-9 w-9"
+        className="h-10 w-10 border-border/60 hover:border-border disabled:opacity-40"
       >
         <ChevronRight className="h-4 w-4" />
         <span className="sr-only">Next Page</span>

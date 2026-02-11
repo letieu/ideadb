@@ -44,23 +44,25 @@ export default function RootLayout({
           >
           <div className="flex flex-col min-h-screen">
             <Suspense fallback={<LoadingBar />}>
-              <main className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8 w-full flex-1">
-                <div className="max-w-4xl mx-auto">
-                  {/* Minimal Utility Row */}
-                  <div className="flex items-center justify-between mb-16">
-                    <Link href="/" className="group flex items-center gap-3">
-                      <Logo className="h-7 w-7 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" />
-                      <span className="text-sm font-bold tracking-widest uppercase text-muted-foreground/40 group-hover:text-primary transition-colors">ideaDB</span>
-                    </Link>
-                    <ModeToggle />
+              <main className="w-full flex-1">
+                <div className="max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-8 lg:px-12">
+                  <div className="max-w-5xl mx-auto">
+                    {/* Minimal Utility Row */}
+                    <div className="flex items-center justify-between mb-16 sm:mb-20">
+                      <Link href="/" className="group flex items-center gap-3">
+                        <Logo className="h-8 w-8 transition-all duration-200 group-hover:scale-105" />
+                        <span className="text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground/50 group-hover:text-primary transition-colors duration-200">ideaDB</span>
+                      </Link>
+                      <ModeToggle />
+                    </div>
+                    {children}
                   </div>
-                  {children}
                 </div>
               </main>
             </Suspense>
-            <footer className="mt-24 border-t border-border/10">
-              <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                <p className="text-center text-xs tracking-widest uppercase text-muted-foreground/30">
+            <footer className="mt-24 sm:mt-32 border-t border-border/5">
+              <div className="max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-8 lg:px-12">
+                <p className="text-center text-xs tracking-[0.15em] uppercase text-muted-foreground/25 font-medium">
                   Built for innovators and problem solvers
                 </p>
               </div>
