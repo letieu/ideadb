@@ -78,15 +78,11 @@ export default async function ProblemsPage({
                     {problem.pain_points && (
                       <blockquote className="bg-problem/8 border-l-2 border-problem/40 pl-4 pr-4 py-4 text-sm text-foreground/85 rounded-r-lg">
                         <span className="text-[11px] font-bold text-problem uppercase tracking-[0.1em] block mb-2">Pain Points</span>
-                        <div className="line-clamp-2 leading-[1.6]">
-                          <ReactMarkdown
-                            components={{
-                              p: ({ children }) => <span className="mb-0 italic">&ldquo;{children}&rdquo;</span>,
-                            }}
-                          >
-                            {problem.pain_points}
-                          </ReactMarkdown>
-                        </div>
+                        <ul className="list-disc list-inside text-sm leading-[1.6] space-y-1">
+                          {problem.pain_points.split(',').map((point, idx) => (
+                            <li key={idx} className="text-foreground/85">{point.trim()}</li>
+                          ))}
+                        </ul>
                       </blockquote>
                     )}
                   </div>
