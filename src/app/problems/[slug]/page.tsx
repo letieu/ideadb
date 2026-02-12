@@ -154,15 +154,11 @@ export default async function ProblemDetailPage({
                         <span className="text-[11px] font-bold text-idea uppercase tracking-[0.1em] block mb-2">
                           Key Features
                         </span>
-                        <div className="text-sm text-foreground/85 leading-[1.6]">
-                          <ReactMarkdown
-                            components={{
-                              p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
-                            }}
-                          >
-                            {idea.features}
-                          </ReactMarkdown>
-                        </div>
+                        <ul className="text-sm text-foreground/85 leading-[1.6] list-disc pl-4 space-y-1">
+                          {idea.features.split(',').map((feature, idx) => (
+                            <li key={idx}>{feature.trim()}</li>
+                          ))}
+                        </ul>
                       </div>
                     )}
                   </CardContent>

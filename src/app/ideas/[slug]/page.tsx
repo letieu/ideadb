@@ -90,17 +90,11 @@ export default async function IdeaDetailPage({
               <span className="text-xs font-semibold text-idea uppercase tracking-wide block mb-2">
                 Key Features
               </span>
-              <div className="text-base text-foreground/90 leading-relaxed">
-                <ReactMarkdown
-                  components={{
-                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                    ul: ({ children }) => <ul className="list-disc pl-4 space-y-1">{children}</ul>,
-                    li: ({ children }) => <li>{children}</li>,
-                  }}
-                >
-                  {idea.features}
-                </ReactMarkdown>
-              </div>
+              <ul className="text-base text-foreground/90 leading-relaxed list-disc pl-4 space-y-1">
+                {idea.features.split(',').map((feature, idx) => (
+                  <li key={idx}>{feature.trim()}</li>
+                ))}
+              </ul>
             </blockquote>
           )}
         </div>
