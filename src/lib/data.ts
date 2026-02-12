@@ -68,8 +68,9 @@ function buildSortClause(sort: string | undefined, hasScore: boolean, tableAlias
     case 'score_asc':
       return hasScore ? `${prefix}score ASC` : `${prefix}created_at ASC`;
     case 'score_desc':
-    default:
       return hasScore ? `${prefix}score DESC` : `${prefix}created_at DESC`;
+    default:
+      return `${prefix}created_at DESC`;
   }
 }
 
