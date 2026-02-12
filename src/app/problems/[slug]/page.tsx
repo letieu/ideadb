@@ -15,15 +15,15 @@ export default async function ProblemDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const problem = getProblemBySlug(slug);
+  const problem = await getProblemBySlug(slug);
 
   if (!problem) {
     notFound();
   }
 
-  const ideas = getIdeasForProblem(problem.id);
-  const products = getProductsForProblem(problem.id);
-  const sources = getSourceItemsForProblem(problem.id);
+  const ideas = await getIdeasForProblem(problem.id);
+  const products = await getProductsForProblem(problem.id);
+  const sources = await getSourceItemsForProblem(problem.id);
 
   return (
     <div className="space-y-8">

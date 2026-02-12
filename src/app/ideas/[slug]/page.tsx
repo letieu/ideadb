@@ -15,14 +15,14 @@ export default async function IdeaDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const idea = getIdeaBySlug(slug);
+  const idea = await getIdeaBySlug(slug);
 
   if (!idea) {
     notFound();
   }
 
-  const problems = getProblemsForIdea(idea.id);
-  const sources = getSourceItemsForIdea(idea.id);
+  const problems = await getProblemsForIdea(idea.id);
+  const sources = await getSourceItemsForIdea(idea.id);
 
   return (
     <div className="space-y-8">

@@ -16,8 +16,8 @@ export default async function ProductsPage({
 }) {
   const { q, category, sort, page } = await searchParams;
   const currentPage = Number(page) || 1;
-  const { data: products, metadata } = getProducts(q, category, sort, currentPage);
-  const categories = getCategories();
+  const { data: products, metadata } = await getProducts(q, category, sort, currentPage);
+  const categories = await getCategories();
 
   return (
     <div className="space-y-12 sm:space-y-16">

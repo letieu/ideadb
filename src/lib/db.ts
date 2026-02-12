@@ -1,8 +1,15 @@
-import Database from 'better-sqlite3';
-import path from 'path';
+import { createClient } from '@libsql/client';
 
-const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'ideadb.db');
-const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
+const TURSO_DATABASE_URL = process.env.TURSO_DATABASE_URL;
+const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
+
+if (!TURSO_DATABASE_URL || !TURSO_AUTH_TOKEN) {
+  throw new Error('TURSO_DATABASE_URL and TURSO_AUTH_TOKEN environment variables are required');
+}
+
+const db = createClient({
+  url: TURSO_DATABASE_URL,
+  authToken: TURSO_AUTH_TOKEN,
+});
 
 export default db;

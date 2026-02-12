@@ -1,46 +1,18 @@
-const Database = require('better-sqlite3');
-const path = require('path');
+const { createClient } = require('@libsql/client');
 
-const dbPath = path.join(process.cwd(), 'ideadb.db');
-const db = new Database(dbPath);
+const TURSO_DATABASE_URL = process.env.TURSO_DATABASE_URL;
+const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
+
+if (!TURSO_DATABASE_URL || !TURSO_AUTH_TOKEN) {
+  throw new Error("TURSO_DATABASE_URL and TURSO_AUTH_TOKEN are required");
+}
+
+const db = createClient({
+  url: TURSO_DATABASE_URL,
+  authToken: TURSO_AUTH_TOKEN,
+});
 
 console.log('Seeding data...');
-
-// Helper to insert problem
-const insertProblem = db.prepare(`
-    INSERT INTO problems (id, slug, title, description, pain_points, score)
-    VALUES (?, ?, ?, ?, ?, ?)
-`);
-
-// Helper to link problem category
-const insertProblemCategory = db.prepare(`
-    INSERT OR IGNORE INTO problem_categories (problem_id, category_slug)
-    VALUES (?, ?)
-`);
-
-// Helper to insert idea
-const insertIdea = db.prepare(`
-    INSERT INTO ideas (id, slug, title, description, features, score)
-    VALUES (?, ?, ?, ?, ?, ?)
-`);
-
-// Helper to link idea category
-const insertIdeaCategory = db.prepare(`
-    INSERT OR IGNORE INTO idea_categories (idea_id, category_slug)
-    VALUES (?, ?)
-`);
-
-// Helper to insert product
-const insertProduct = db.prepare(`
-    INSERT INTO products (id, slug, name, description, url)
-    VALUES (?, ?, ?, ?, ?)
-`);
-
-const insertProductCategory = db.prepare(`
-    INSERT OR IGNORE INTO product_categories (product_id, category_slug)
-    VALUES (?, ?)
-`);
-
 
 const problems = [
     {
@@ -112,32 +84,74 @@ const products = [
     }
 ];
 
-const transaction = db.transaction(() => {
-    for (const p of problems) {
-        try {
-            insertProblem.run(p.id, p.slug, p.title, p.description, p.pain_points, p.score);
-            for (const c of p.categories) {
-                insertProblemCategory.run(p.id, c);
+(async () => {
+    try {
+        // Insert problems
+        for (const p of problems) {
+            try {
+                await db.execute({
+                    sql: `INSERT INTO problems (id, slug, title, description, pain_points, score)
+                          VALUES (?, ?, ?, ?, ?, ?)`,
+                    args: [p.id, p.slug, p.title, p.description, p.pain_points, p.score]
+                });
+                
+                for (const c of p.categories) {
+                    await db.execute({
+                        sql: `INSERT OR IGNORE INTO problem_categories (problem_id, category_slug)
+                              VALUES (?, ?)`,
+                        args: [p.id, c]
+                    });
+                }
+            } catch (e) { 
+                console.log(`Skipping problem ${p.id} (maybe exists)`); 
             }
-        } catch (e) { console.log(`Skipping problem ${p.id} (maybe exists)`); }
-    }
-    for (const i of ideas) {
-        try {
-             insertIdea.run(i.id, i.slug, i.title, i.description, i.features, i.score);
-             for (const c of i.categories) {
-                 insertIdeaCategory.run(i.id, c);
-             }
-        } catch (e) { console.log(`Skipping idea ${i.id}`); }
-    }
-    for (const p of products) {
-        try {
-            insertProduct.run(p.id, p.slug, p.name, p.description, p.url);
-            for (const c of p.categories) {
-                insertProductCategory.run(p.id, c);
-            }
-        } catch (e) { console.log(`Skipping product ${p.id}`); }
-    }
-});
+        }
 
-transaction();
-console.log('Seeding complete.');
+        // Insert ideas
+        for (const i of ideas) {
+            try {
+                await db.execute({
+                    sql: `INSERT INTO ideas (id, slug, title, description, features, score)
+                          VALUES (?, ?, ?, ?, ?, ?)`,
+                    args: [i.id, i.slug, i.title, i.description, i.features, i.score]
+                });
+                
+                for (const c of i.categories) {
+                    await db.execute({
+                        sql: `INSERT OR IGNORE INTO idea_categories (idea_id, category_slug)
+                              VALUES (?, ?)`,
+                        args: [i.id, c]
+                    });
+                }
+            } catch (e) { 
+                console.log(`Skipping idea ${i.id} (maybe exists)`); 
+            }
+        }
+
+        // Insert products
+        for (const p of products) {
+            try {
+                await db.execute({
+                    sql: `INSERT INTO products (id, slug, name, description, url)
+                          VALUES (?, ?, ?, ?, ?)`,
+                    args: [p.id, p.slug, p.name, p.description, p.url]
+                });
+                
+                for (const c of p.categories) {
+                    await db.execute({
+                        sql: `INSERT OR IGNORE INTO product_categories (product_id, category_slug)
+                              VALUES (?, ?)`,
+                        args: [p.id, c]
+                    });
+                }
+            } catch (e) { 
+                console.log(`Skipping product ${p.id} (maybe exists)`); 
+            }
+        }
+
+        console.log('Seeding complete.');
+    } catch (error) {
+        console.error('Error seeding data:', error);
+        process.exit(1);
+    }
+})();
