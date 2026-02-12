@@ -42,7 +42,7 @@ export function FilterBar({ categories, hasScore = true }: FilterBarProps) {
   const [query, setQuery] = React.useState(searchParams.get('q') || '');
 
   const currentCategory = searchParams.get('category');
-  const currentSort = searchParams.get('sort') || (hasScore ? 'score_desc' : 'newest');
+  const currentSort = searchParams.get('sort') || 'newest';
 
   const updateParam = React.useCallback((key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
