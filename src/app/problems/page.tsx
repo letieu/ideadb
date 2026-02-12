@@ -7,6 +7,19 @@ import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+import { DataSourceBadge } from '@/components/data-source-badge';
+import { PopularKeywords } from '@/components/popular-keywords';
+
+export const metadata: Metadata = {
+  title: 'Problems',
+  description: 'Explore real-world problems that need solutions. Browse by category and find problems to solve for your next startup or project.',
+  keywords: ['problems', 'challenges', 'pain points', 'startup ideas', 'business problems', 'saas problems', 'app problems', 'reddit problems', 'customer pain points', 'problem validation', 'market gaps', 'startup opportunities', 'real world problems', 'user problems'],
+  openGraph: {
+    title: 'Problems | ideaDB',
+    description: 'Explore real-world problems that need solutions. Browse by category and find problems to solve.',
+  },
+};
 
 export default async function ProblemsPage({
   searchParams,
@@ -30,6 +43,8 @@ export default async function ProblemsPage({
             </span>
           )}
         </p>
+        <DataSourceBadge sources={["Reddit", "Hacker News", "IndieHackers"]} />
+        <PopularKeywords type="problems" />
       </header>
 
       <div className="space-y-8 sm:space-y-10">

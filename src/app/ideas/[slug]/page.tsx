@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Target, ExternalLink, FileText } from 'lucide-react';
+import { ArrowLeft, Target, ExternalLink, FileText, Users } from 'lucide-react';
 import { getIdeaBySlug, getProblemsForIdea, getSourceItemsForIdea } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { VoteButton } from '@/components/vote-button';
@@ -8,6 +8,57 @@ import { getCategoryColor, cn, formatDate } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+import { KeywordsList } from '@/components/keywords-list';
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const idea = await getIdeaBySlug(slug);
+
+  if (!idea) {
+    return {
+      title: 'Idea Not Found',
+    };
+  }
+
+  const description = idea.description.slice(0, 160).replace(/[#*_`]/g, '');
+  const categoryNames = idea.categories?.map(c => c.name).join(', ') || '';
+  const keywords = [
+    'idea',
+    'solution',
+    'innovation',
+    'startup idea',
+    'product idea',
+    'mvp idea',
+    'business idea',
+    'feature idea',
+    ...categoryNames.toLowerCase().split(', ').filter(Boolean)
+  ];
+
+  return {
+    title: idea.title,
+    description: `${description}...`,
+    keywords,
+    alternates: {
+      canonical: `/ideas/${idea.slug}`,
+    },
+    openGraph: {
+      title: idea.title,
+      description: `${description}...`,
+      type: 'article',
+      url: `https://ideadb.shop/ideas/${idea.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: idea.title,
+      description: `${description}...`,
+    },
+  };
+}
 
 export default async function IdeaDetailPage({
   params,
@@ -24,8 +75,46 @@ export default async function IdeaDetailPage({
   const problems = await getProblemsForIdea(idea.id);
   const sources = await getSourceItemsForIdea(idea.id);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: idea.title,
+    description: idea.description.slice(0, 200).replace(/[#*_`]/g, ''),
+    datePublished: idea.created_at,
+    author: {
+      "@type": "Organization",
+      name: "ideaDB",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "ideaDB",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://ideadb.shop/logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://ideadb.shop/ideas/${idea.slug}`,
+    },
+    about: idea.categories?.map((c) => ({
+      "@type": "Thing",
+      name: c.name,
+    })),
+    isRelatedTo: problems.map((problem) => ({
+      "@type": "Thing",
+      name: problem.title,
+      url: `https://ideadb.shop/problems/${problem.slug}`,
+    })),
+  };
+
   return (
-    <div className="space-y-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="space-y-8">
       {/* Back button */}
       <Link 
         href="/ideas" 
@@ -56,9 +145,14 @@ export default async function IdeaDetailPage({
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground">
-            Created {formatDate(idea.created_at)}
-          </p>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span>Created {formatDate(idea.created_at)}</span>
+            <span className="text-border">|</span>
+            <span className="inline-flex items-center gap-1 text-muted-foreground/70">
+              <Users className="h-3 w-3" />
+              <span className="text-xs">From community</span>
+            </span>
+          </div>
         </div>
 
         {/* Action Bar */}
@@ -97,6 +191,18 @@ export default async function IdeaDetailPage({
               </ul>
             </blockquote>
           )}
+          
+          <KeywordsList 
+            keywords={[
+              'idea',
+              'solution',
+              'innovation',
+              'startup idea',
+              'product idea',
+              'mvp',
+              ...idea.categories?.map(c => c.name.toLowerCase()) || []
+            ]}
+          />
         </div>
       </div>
 
@@ -221,5 +327,6 @@ export default async function IdeaDetailPage({
         </Card>
       )}
     </div>
+    </>
   );
 }

@@ -406,6 +406,33 @@ export async function getIdeaBySlug(slug: string) {
   } as unknown as Idea;
 }
 
+// Get all problem slugs for sitemap
+export async function getAllProblemSlugs() {
+  const result = await db.execute({
+    sql: 'SELECT slug, updated_at FROM problems ORDER BY created_at DESC',
+    args: []
+  });
+  return result.rows as unknown as { slug: string; updated_at: string }[];
+}
+
+// Get all idea slugs for sitemap
+export async function getAllIdeaSlugs() {
+  const result = await db.execute({
+    sql: 'SELECT slug, updated_at FROM ideas ORDER BY created_at DESC',
+    args: []
+  });
+  return result.rows as unknown as { slug: string; updated_at: string }[];
+}
+
+// Get all product slugs for sitemap
+export async function getAllProductSlugs() {
+  const result = await db.execute({
+    sql: 'SELECT slug, updated_at FROM products ORDER BY created_at DESC',
+    args: []
+  });
+  return result.rows as unknown as { slug: string; updated_at: string }[];
+}
+
 // Get problems linked to an idea
 export async function getProblemsForIdea(ideaId: string) {
   const result = await db.execute({

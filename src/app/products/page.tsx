@@ -8,6 +8,19 @@ import { Pagination } from '@/components/pagination';
 import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+import { DataSourceBadge } from '@/components/data-source-badge';
+import { PopularKeywords } from '@/components/popular-keywords';
+
+export const metadata: Metadata = {
+  title: 'Products',
+  description: 'Explore existing products and solutions currently serving the market. Find competitors and learn from successful implementations.',
+  keywords: ['products', 'solutions', 'software', 'apps', 'tools', 'competitors', 'market research', 'existing solutions', 'product research', 'competitor analysis', 'market validation', 'product examples'],
+  openGraph: {
+    title: 'Products | ideaDB',
+    description: 'Explore existing products and solutions currently serving the market.',
+  },
+};
 
 export default async function ProductsPage({
   searchParams,
@@ -31,6 +44,8 @@ export default async function ProductsPage({
               </span>
             )}
         </p>
+        <DataSourceBadge sources={["Reddit", "Hacker News", "IndieHackers"]} />
+        <PopularKeywords type="products" />
       </header>
 
       <div className="space-y-8 sm:space-y-10">

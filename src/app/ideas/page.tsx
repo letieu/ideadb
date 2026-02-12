@@ -7,6 +7,19 @@ import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+import { DataSourceBadge } from '@/components/data-source-badge';
+import { PopularKeywords } from '@/components/popular-keywords';
+
+export const metadata: Metadata = {
+  title: 'Ideas',
+  description: 'Discover innovative ideas and feature sets to solve real-world problems. Browse creative solutions by category.',
+  keywords: ['ideas', 'innovation', 'solutions', 'feature sets', 'product ideas', 'startup concepts', 'startup ideas', 'app ideas', 'saas ideas', 'side project ideas', 'mvp ideas', 'business ideas', 'innovation ideas', 'product inspiration'],
+  openGraph: {
+    title: 'Ideas | ideaDB',
+    description: 'Discover innovative ideas and feature sets to solve real-world problems.',
+  },
+};
 
 export default async function IdeasPage({
   searchParams,
@@ -30,6 +43,8 @@ export default async function IdeasPage({
               </span>
             )}
         </p>
+        <DataSourceBadge sources={["Reddit", "Hacker News", "IndieHackers"]} />
+        <PopularKeywords type="ideas" />
       </header>
 
       <div className="space-y-8 sm:space-y-10">

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Lightbulb, Package, FileText } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Lightbulb, Package, FileText, Users } from 'lucide-react';
 import { getProblemBySlug, getIdeasForProblem, getProductsForProblem, getSourceItemsForProblem } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { VoteButton } from '@/components/vote-button';
@@ -8,6 +8,57 @@ import { getCategoryColor, cn, formatDate } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+import { KeywordsList } from '@/components/keywords-list';
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const problem = await getProblemBySlug(slug);
+
+  if (!problem) {
+    return {
+      title: 'Problem Not Found',
+    };
+  }
+
+  const description = problem.description.slice(0, 160).replace(/[#*_`]/g, '');
+  const categoryNames = problem.categories?.map(c => c.name).join(', ') || '';
+  const keywords = [
+    'problem',
+    'challenge',
+    'pain point',
+    'startup opportunity',
+    'business problem',
+    'real world problem',
+    'customer problem',
+    'market gap',
+    ...categoryNames.toLowerCase().split(', ').filter(Boolean)
+  ];
+
+  return {
+    title: problem.title,
+    description: `${description}...`,
+    keywords,
+    alternates: {
+      canonical: `/problems/${problem.slug}`,
+    },
+    openGraph: {
+      title: problem.title,
+      description: `${description}...`,
+      type: 'article',
+      url: `https://ideadb.shop/problems/${problem.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: problem.title,
+      description: `${description}...`,
+    },
+  };
+}
 
 export default async function ProblemDetailPage({
   params,
@@ -25,8 +76,46 @@ export default async function ProblemDetailPage({
   const products = await getProductsForProblem(problem.id);
   const sources = await getSourceItemsForProblem(problem.id);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: problem.title,
+    description: problem.description.slice(0, 200).replace(/[#*_`]/g, ''),
+    datePublished: problem.created_at,
+    author: {
+      "@type": "Organization",
+      name: "ideaDB",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "ideaDB",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://ideadb.shop/logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://ideadb.shop/problems/${problem.slug}`,
+    },
+    about: problem.categories?.map((c) => ({
+      "@type": "Thing",
+      name: c.name,
+    })),
+    mentions: ideas.map((idea) => ({
+      "@type": "CreativeWork",
+      name: idea.title,
+      url: `https://ideadb.shop/ideas/${idea.slug}`,
+    })),
+  };
+
   return (
-    <div className="space-y-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="space-y-8">
       {/* Back button */}
       <Link 
         href="/problems" 
@@ -57,9 +146,14 @@ export default async function ProblemDetailPage({
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground/60 font-medium">
-            Created {formatDate(problem.created_at)}
-          </p>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground/60 font-medium">
+            <span>Created {formatDate(problem.created_at)}</span>
+            <span className="text-border">|</span>
+            <span className="inline-flex items-center gap-1 text-muted-foreground/70">
+              <Users className="h-3 w-3" />
+              <span className="text-xs">From community</span>
+            </span>
+          </div>
         </div>
 
         {/* Action Bar - Place for Upvote, and future actions like Save, Like, Share */}
@@ -99,6 +193,17 @@ export default async function ProblemDetailPage({
               </ul>
             </blockquote>
           )}
+          
+          <KeywordsList 
+            keywords={[
+              'problem',
+              'challenge',
+              'pain point',
+              'startup opportunity',
+              'business problem',
+              ...problem.categories?.map(c => c.name.toLowerCase()) || []
+            ]}
+          />
         </div>
       </div>
 
@@ -296,5 +401,6 @@ export default async function ProblemDetailPage({
         </Card>
       )}
     </div>
+    </>
   );
 }
