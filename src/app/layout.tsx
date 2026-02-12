@@ -4,7 +4,10 @@ import "./globals.css";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Logo } from "@/components/logo";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/next";
 import Link from "next/link";
+import { Github } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -50,7 +53,15 @@ export default function RootLayout({
                       <Logo className="h-8 w-8 transition-all duration-200 group-hover:scale-105" />
                       <span className="text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground/50 group-hover:text-primary transition-colors duration-200">ideaDB</span>
                     </Link>
-                    <ModeToggle />
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" asChild>
+                        <a href="https://github.com/letieu/ideadb" target="_blank" rel="noopener noreferrer">
+                          <Github className="h-[1.2rem] w-[1.2rem]" />
+                          <span className="sr-only">GitHub</span>
+                        </a>
+                      </Button>
+                      <ModeToggle />
+                    </div>
                   </div>
                   {children}
                 </div>
@@ -65,6 +76,7 @@ export default function RootLayout({
             </footer>
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
