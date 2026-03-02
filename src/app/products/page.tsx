@@ -9,7 +9,6 @@ import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
-import { DataSourceBadge } from '@/components/data-source-badge';
 import { PopularKeywords } from '@/components/popular-keywords';
 
 export const metadata: Metadata = {
@@ -44,7 +43,6 @@ export default async function ProductsPage({
               </span>
             )}
         </p>
-        <DataSourceBadge sources={["Reddit", "Hacker News", "IndieHackers"]} />
         <PopularKeywords type="products" />
       </header>
 

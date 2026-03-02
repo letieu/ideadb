@@ -43,7 +43,6 @@ export default async function ProblemsPage({
             </span>
           )}
         </p>
-        <DataSourceBadge sources={["Reddit", "Hacker News", "IndieHackers"]} />
         <PopularKeywords type="problems" />
       </header>
 
