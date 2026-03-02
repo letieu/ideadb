@@ -128,7 +128,7 @@ export default function RootLayout({
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                       </span>
                       <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                        Live data from Reddit, HN & real users — updated daily
+                        Real-world startup ideas, problems DB
                       </span>
                     </div>
                   </div>
