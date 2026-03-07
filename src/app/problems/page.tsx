@@ -8,8 +8,6 @@ import { getCategoryColor, cn } from '@/lib/utils';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
-import { DataSourceBadge } from '@/components/data-source-badge';
-import { PopularKeywords } from '@/components/popular-keywords';
 
 export const metadata: Metadata = {
   title: 'Problems',
@@ -37,13 +35,7 @@ export default async function ProblemsPage({
         <TitleNav />
         <p className="text-base text-muted-foreground/80 max-w-2xl leading-[1.7]">
           Deeply understand real-world challenges before thinking about solutions.
-          {metadata.total > 0 && (
-            <span className="block mt-2 text-sm font-semibold text-foreground/60 tracking-wide">
-              {metadata.total} problem{metadata.total !== 1 ? 's' : ''}
-            </span>
-          )}
         </p>
-        <PopularKeywords type="problems" />
       </header>
 
       <div className="space-y-8 sm:space-y-10">

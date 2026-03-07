@@ -9,7 +9,6 @@ import { TitleNav } from '@/components/title-nav';
 import { getCategoryColor, cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
-import { PopularKeywords } from '@/components/popular-keywords';
 
 export const metadata: Metadata = {
   title: 'Products',
@@ -37,13 +36,7 @@ export default async function ProductsPage({
         <TitleNav />
         <p className="text-base text-muted-foreground/80 max-w-2xl leading-[1.7]">
             Case studies of existing solutions and products currently serving the market.
-            {metadata.total > 0 && (
-              <span className="block mt-2 text-sm font-semibold text-foreground/60 tracking-wide">
-                {metadata.total} product{metadata.total !== 1 ? 's' : ''}
-              </span>
-            )}
         </p>
-        <PopularKeywords type="products" />
       </header>
 
       <div className="space-y-8 sm:space-y-10">
