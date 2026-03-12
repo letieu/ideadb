@@ -51,11 +51,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `${description}...`,
       type: 'article',
       url: `https://ideadb.shop/ideas/${idea.slug}`,
+      images: [
+        {
+          url: `/ideas/${idea.slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: idea.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: idea.title,
       description: `${description}...`,
+      images: [`/ideas/${idea.slug}/opengraph-image`],
     },
   };
 }
