@@ -17,6 +17,20 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Products | ideaDB',
     description: 'Explore existing products and solutions currently serving the market.',
+    images: [
+      {
+        url: '/products/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Products Database - ideaDB',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Products | ideaDB',
+    description: 'Explore existing products and solutions.',
+    images: ['/products/opengraph-image'],
   },
 };
 

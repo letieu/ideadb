@@ -1,8 +1,10 @@
 import { ImageResponse } from 'next/og';
 
+// Route segment config
 export const runtime = 'edge';
 
-export const alt = 'ideaDB - Problems, Ideas & Products Database';
+// Image metadata
+export const alt = 'Products Database - ideaDB';
 export const size = {
   width: 1200,
   height: 630,
@@ -26,33 +28,25 @@ export default async function Image() {
           position: 'relative',
         }}
       >
+        {/* Background Gradients */}
         <div style={{
           position: 'absolute',
           top: -100,
           right: -100,
           width: 500,
           height: 500,
-          background: 'radial-gradient(circle, rgba(0, 229, 204, 0.15) 0%, rgba(5, 8, 16, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(5, 8, 16, 0) 70%)',
           borderRadius: '50%',
-          display: 'flex',
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: -150,
-          left: -150,
-          width: 600,
-          height: 600,
-          background: 'radial-gradient(circle, rgba(255, 77, 77, 0.1) 0%, rgba(5, 8, 16, 0) 70%)',
-          borderRadius: '50%',
-          display: 'flex',
         }} />
 
+        {/* Content Container */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center',
           zIndex: 10,
         }}>
+          {/* Logo & Brand Row */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 40 }}>
             <svg
               viewBox="0 0 100 100"
@@ -78,40 +72,35 @@ export default async function Image() {
               fontWeight: 900, 
               color: 'white',
               letterSpacing: '0.05em',
-              display: 'flex',
             }}>
               ideaDB
             </div>
           </div>
 
+          {/* Title */}
           <div style={{ 
-            fontSize: 42, 
+            fontSize: 72, 
+            color: '#3b82f6',
+            fontWeight: 800,
+            textAlign: 'center',
+            marginBottom: 20,
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+          }}>
+            Products Database
+          </div>
+
+          {/* Subtitle */}
+          <div style={{ 
+            fontSize: 36, 
             color: '#8892b0',
             fontWeight: 500,
             textAlign: 'center',
-            maxWidth: 900,
+            maxWidth: 800,
             lineHeight: 1.4,
-            display: 'flex',
           }}>
-            Discover real-world problems, explore innovative ideas, and find existing products.
+            Case studies of existing solutions and products currently serving the market.
           </div>
-        </div>
-
-        <div style={{
-          position: 'absolute',
-          bottom: 40,
-          display: 'flex',
-          fontSize: 24,
-          color: 'rgba(136, 146, 176, 0.5)',
-          fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.2em',
-        }}>
-          <span style={{ display: 'flex' }}>Problems</span>
-          <span style={{ color: 'rgba(136, 146, 176, 0.2)', marginLeft: 40, marginRight: 40, display: 'flex' }}>|</span>
-          <span style={{ display: 'flex' }}>Ideas</span>
-          <span style={{ color: 'rgba(136, 146, 176, 0.2)', marginLeft: 40, marginRight: 40, display: 'flex' }}>|</span>
-          <span style={{ display: 'flex' }}>Products</span>
         </div>
       </div>
     ),

@@ -16,6 +16,20 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Startup ideas database',
     description: 'Discover innovative ideas and feature sets to solve real-world problems.',
+    images: [
+      {
+        url: '/ideas/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Startup Ideas Database - ideaDB',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Startup ideas database',
+    description: 'Discover innovative ideas and feature sets.',
+    images: ['/ideas/opengraph-image'],
   },
 };
 

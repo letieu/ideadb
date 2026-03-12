@@ -42,21 +42,12 @@ export const metadata: Metadata = {
     siteName: "ideaDB",
     title: "ideaDB - Problems, Ideas & Products Database",
     description: "Discover real-world problems, explore innovative ideas, and find existing products. A curated database for innovators, entrepreneurs, and problem solvers.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "ideaDB - Problems, Ideas & Products Database",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "ideaDB - Problems, Ideas & Products Database",
     description: "Discover real-world problems, explore innovative ideas, and find existing products.",
     creator: "@ideadb",
-    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
