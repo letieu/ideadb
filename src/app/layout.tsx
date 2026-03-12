@@ -140,7 +140,7 @@ export default function RootLayout({
             <footer className="mt-24 sm:mt-32 border-t border-border/5">
               <div className="max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-8 lg:px-12">
                 {/* Trust Indicators */}
-                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-8">
+                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-12">
                   <div className="flex items-center gap-2 text-muted-foreground/50">
                     <Users className="h-4 w-4" />
                     <span className="text-xs font-medium">Real User Data</span>
@@ -154,9 +154,21 @@ export default function RootLayout({
                     <span className="text-xs font-medium">Updated Daily</span>
                   </div>
                 </div>
-                <p className="text-center text-xs tracking-[0.15em] uppercase text-muted-foreground/25 font-medium">
-                  Built for innovators and problem solvers
-                </p>
+
+                {/* Footer Info */}
+                <div className="flex flex-col items-center gap-6">
+                  <p className="text-center text-xs tracking-[0.15em] uppercase text-muted-foreground/25 font-medium">
+                    Built for innovators and problem solvers
+                  </p>
+                  <a 
+                    href="https://t.me/tieu_exe" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground/30 hover:text-primary transition-colors duration-200"
+                  >
+                    Contact & Feedback
+                  </a>
+                </div>
               </div>
             </footer>
           </div>
