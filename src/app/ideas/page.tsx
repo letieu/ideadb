@@ -10,11 +10,11 @@ import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Ideas',
+  title: 'Startup ideas database',
   description: 'Discover innovative ideas and feature sets to solve real-world problems. Browse creative solutions by category.',
   keywords: ['ideas', 'innovation', 'solutions', 'feature sets', 'product ideas', 'startup concepts', 'startup ideas', 'app ideas', 'saas ideas', 'side project ideas', 'mvp ideas', 'business ideas', 'innovation ideas', 'product inspiration'],
   openGraph: {
-    title: 'Ideas | ideaDB',
+    title: 'Startup ideas database',
     description: 'Discover innovative ideas and feature sets to solve real-world problems.',
   },
 };

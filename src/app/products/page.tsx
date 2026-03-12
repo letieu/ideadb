@@ -11,7 +11,7 @@ import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Products',
+  title: 'Explore existing products and solutions currently serving the market',
   description: 'Explore existing products and solutions currently serving the market. Find competitors and learn from successful implementations.',
   keywords: ['products', 'solutions', 'software', 'apps', 'tools', 'competitors', 'market research', 'existing solutions', 'product research', 'competitor analysis', 'market validation', 'product examples'],
   openGraph: {

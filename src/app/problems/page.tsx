@@ -10,11 +10,11 @@ import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Problems',
+  title: 'Real Problems Database – Find Real Problems From Reddit & HN',
   description: 'Explore real-world problems that need solutions. Browse by category and find problems to solve for your next startup or project.',
   keywords: ['problems', 'challenges', 'pain points', 'startup ideas', 'business problems', 'saas problems', 'app problems', 'reddit problems', 'customer pain points', 'problem validation', 'market gaps', 'startup opportunities', 'real world problems', 'user problems'],
   openGraph: {
-    title: 'Problems | ideaDB',
+    title: 'Startup ideas database',
     description: 'Explore real-world problems that need solutions. Browse by category and find problems to solve.',
   },
 };
