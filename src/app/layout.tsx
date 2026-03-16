@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
 import Link from "next/link";
 import { Github, Users, RefreshCw, Globe } from "lucide-react";
+import { Faq } from "@/components/faq";
 import { Button } from "@/components/ui/button";
 
 const spaceGrotesk = Space_Grotesk({
@@ -139,6 +140,11 @@ export default function RootLayout({
             </main>
             <footer className="mt-24 sm:mt-32 border-t border-border/5">
               <div className="max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-8 lg:px-12">
+                {/* FAQ */}
+                <div className="mb-16">
+                  <Faq />
+                </div>
+
                 {/* Trust Indicators */}
                 <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-12">
                   <div className="flex items-center gap-2 text-muted-foreground/50">
