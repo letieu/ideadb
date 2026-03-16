@@ -160,14 +160,30 @@ export default function RootLayout({
                   <p className="text-center text-xs tracking-[0.15em] uppercase text-muted-foreground/25 font-medium">
                     Built for innovators and problem solvers
                   </p>
-                  <a 
-                    href="https://t.me/tieu_exe" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground/30 hover:text-primary transition-colors duration-200"
-                  >
-                    Contact & Feedback
-                  </a>
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <a 
+                      href="https://t.me/tieu_exe" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground/30 hover:text-primary transition-colors duration-200"
+                    >
+                      Contact & Feedback
+                    </a>
+                    <span className="text-muted-foreground/15">·</span>
+                    <Link
+                      href="/terms"
+                      className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground/30 hover:text-primary transition-colors duration-200"
+                    >
+                      Terms of Use
+                    </Link>
+                    <span className="text-muted-foreground/15">·</span>
+                    <Link
+                      href="/privacy"
+                      className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground/30 hover:text-primary transition-colors duration-200"
+                    >
+                      Privacy Policy
+                    </Link>
+                  </div>
                 </div>
               </div>
             </footer>
